@@ -5,19 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>宿泊者名簿登録 / Guest Registration</title>
     <style>
-        body { font-family: "Helvetica Neue", Arial, sans-serif; background-color: #f0ebf8; margin: 0; padding: 20px; color: #202124; line-height: 1.6; }
+        body { font-family: sans-serif; background-color: #f0ebf8; margin: 0; padding: 20px; color: #202124; }
         .form-container { max-width: 640px; margin: 0 auto; }
         .header-card { background: white; border-top: 8px solid #673ab7; border-radius: 8px; padding: 24px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .question-card { background: white; border-radius: 8px; padding: 24px; margin-bottom: 12px; border: 1px solid #dadce0; }
         .label { font-weight: bold; display: block; margin-bottom: 8px; font-size: 16px; }
-        .sub-label { font-size: 13px; color: #5f6368; margin-bottom: 10px; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select { 
+        .description { font-size: 13px; color: #5f6368; margin-bottom: 15px; white-space: pre-wrap; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea { 
             width: 100%; padding: 10px; border: none; border-bottom: 1px solid #dadce0; font-size: 16px; box-sizing: border-box; outline: none; background: #fafafa;
         }
         input:focus { border-bottom: 2px solid #673ab7; background: #fff; }
-        .terms-box { height: 200px; overflow-y: scroll; border: 1px solid #dadce0; padding: 15px; font-size: 12px; background: #fff; margin-bottom: 10px; white-space: pre-wrap; }
+        .radio-group { margin-top: 10px; }
+        .radio-item { margin-bottom: 10px; display: flex; align-items: center; }
+        .radio-item input { margin-right: 10px; }
         .submit-btn { background-color: #673ab7; color: white; padding: 12px 30px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; width: 100%; }
         .required { color: #d93025; }
+        .terms-box { height: 150px; overflow-y: scroll; border: 1px solid #dadce0; padding: 15px; font-size: 12px; background: #fff; margin-bottom: 10px; white-space: pre-wrap; }
     </style>
 </head>
 <body>
@@ -29,71 +32,75 @@
 
         <form id="mainForm">
             <div class="question-card">
-                <span class="label">規約への同意 / Agreement <span class="required">*</span></span>
-                <div class="terms-box">
-【宿泊約款】
-（第1条〜第21条の全文をここに記載）
-【ペット同伴規約】
-（第1条〜第11条の全文をここに記載）
-※前回の回答でいただいたテキストをここに貼り付けてください。
+                <span class="label">利用規約およびペット同伴規約への同意 <span class="required">*</span></span>
+                <div class="terms-box">（ここに宿泊約款・ペット規約を貼り付け）</div>
+                <label><input type="checkbox" id="agree" required> 同意します / I agree</label>
+            </div>
+
+            <div class="question-card">
+                <span class="label">ペットの滞在有無／Will you be staying with a pet? <span class="required">*</span></span>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="pet" value="はい(Yes)" required> はい（Yes, I will be staying with a pet）</label>
+                    <label class="radio-item"><input type="radio" name="pet" value="いいえ(No)"> いいえ（No, I will not be staying with a pet）</label>
                 </div>
-                <label><input type="checkbox" id="agree" required> 規約に同意します / I agree to the terms.</label>
             </div>
 
             <div class="question-card">
-                <label class="label">代表者氏名 / Representative Name <span class="required">*</span></label>
-                <input type="text" id="name" required placeholder="山田 太郎 / Taro Yamada">
+                <label class="label">宿泊者氏名(全員)／Guest's name(All guests) <span class="required">*</span></label>
+                <p class="description">宿泊者全員の名前を改行して入力してください。 / Please enter the names of all guests, each on a new line.</p>
+                <textarea id="guestNames" required rows="4" placeholder="1. 山田太郎（35）, 2. 山田花子 (32)..."></textarea>
             </div>
 
             <div class="question-card">
-                <label class="label">代表者住所 / Address <span class="required">*</span></label>
-                <div class="sub-label">日本在住の方は現住所、外国籍の方は本国住所</div>
-                <input type="text" id="address" required>
+                <label class="label">宿泊者住所（代表者の住所を記入）／ Guest Address <span class="required">*</span></label>
+                <textarea id="address" required rows="2"></textarea>
             </div>
 
             <div class="question-card">
-                <label class="label">電話番号 / Phone Number <span class="required">*</span></label>
+                <label class="label">電話番号／ Phone Number <span class="required">*</span></label>
                 <input type="tel" id="tel" required>
             </div>
 
             <div class="question-card">
-                <label class="label">メールアドレス / Email <span class="required">*</span></label>
+                <label class="label">メールアドレス／Email Address <span class="required">*</span></label>
                 <input type="email" id="email" required>
             </div>
 
             <div class="question-card">
-                <label class="label">宿泊人数 / Number of Guests <span class="required">*</span></label>
-                <input type="number" id="guestCount" required min="1">
+                <span class="label">性別／Gender <span class="required">*</span></span>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="gender" value="男性" required> 男性／Male</label>
+                    <label class="radio-item"><input type="radio" name="gender" value="女性"> 女性／Female</label>
+                    <label class="radio-item"><input type="radio" name="gender" value="その他"> その他／Other</label>
+                </div>
             </div>
 
             <div class="question-card">
-                <label class="label">全員の氏名・年齢 / Names and Ages of all guests <span class="required">*</span></label>
-                <textarea id="allGuestInfo" rows="4" required placeholder="1. 山田太郎 (35), 2. 山田花子 (32)..."></textarea>
-            </div>
-
-            <div class="question-card" style="background-color: #f8f9fa;">
-                <label class="label">【外国籍の方のみ】国籍・パスポート番号 / Nationality & Passport Number</label>
-                <input type="text" id="nationality" placeholder="Nationality & Passport No.">
+                <label class="label">年齢／Age <span class="required">*</span></label>
+                <input type="text" id="age" required>
             </div>
 
             <div class="question-card">
-                <label class="label">前泊地 / Previous Stop</label>
-                <input type="text" id="prevPlace">
+                <label class="label">前泊地／Stayed Last night <span class="required">*</span></label>
+                <input type="text" id="prevStay" required>
             </div>
             <div class="question-card">
-                <label class="label">次泊地 / Next Destination</label>
-                <input type="text" id="nextPlace">
-            </div>
-
-            <div class="question-card">
-                <label class="label">身分証・ワクチン証明の添付 / ID or Vaccination Photo <span class="required">*</span></label>
-                <div class="sub-label">日本在住者：身分証 / 外国籍：パスポート / ペット同伴：ワクチン証明</div>
-                <input type="file" id="fileInput" accept="image/*" required>
+                <label class="label">行先地／Destination <span class="required">*</span></label>
+                <input type="text" id="nextStay" required>
             </div>
 
             <div class="question-card">
-                <label class="label">備考 / Remarks</label>
-                <textarea id="details" rows="3"></textarea>
+                <label class="label">チェックイン日／Check-in Date <span class="required">*</span></label>
+                <input type="date" id="checkinDate" required>
+            </div>
+            <div class="question-card">
+                <label class="label">チェックアウト日／Check-out Date <span class="required">*</span></label>
+                <input type="date" id="checkoutDate" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">身分証明書／Passport pictures (日本国籍の方は不要です)</label>
+                <input type="file" id="fileInput" accept="image/*">
             </div>
 
             <button type="submit" class="submit-btn" id="submitBtn">送信して完了 / Submit</button>
@@ -108,7 +115,7 @@
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.innerText = "送信中...";
+            btn.innerText = "送信中 / Sending...";
 
             const file = document.getElementById('fileInput').files[0];
             let fileData = null;
@@ -121,23 +128,29 @@
             }
 
             const payload = {
-                name: document.getElementById('name').value,
+                pet: document.querySelector('input[name="pet"]:checked').value,
+                names: document.getElementById('guestNames').value,
                 address: document.getElementById('address').value,
                 tel: document.getElementById('tel').value,
                 email: document.getElementById('email').value,
-                guestCount: document.getElementById('guestCount').value,
-                allGuestInfo: document.getElementById('allGuestInfo').value,
-                nationality: document.getElementById('nationality').value,
-                prevPlace: document.getElementById('prevPlace').value,
-                nextPlace: document.getElementById('nextPlace').value,
-                details: document.getElementById('details').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                age: document.getElementById('age').value,
+                prev: document.getElementById('prevStay').value,
+                next: document.getElementById('nextStay').value,
+                checkin: document.getElementById('checkinDate').value,
+                checkout: document.getElementById('checkoutDate').value,
                 fileData: fileData,
                 fileName: file ? file.name : ""
             };
 
-            const response = await fetch(gasUrl, { method: "POST", body: JSON.stringify(payload) });
-            const result = await response.json();
-            if (result.result === "success") window.location.href = redirectUrl;
+            try {
+                const response = await fetch(gasUrl, { method: "POST", body: JSON.stringify(payload) });
+                const result = await response.json();
+                if (result.result === "success") window.location.href = redirectUrl;
+            } catch (e) {
+                alert("送信エラー。再試行してください。");
+                btn.disabled = false;
+            }
         };
     </script>
 </body>
