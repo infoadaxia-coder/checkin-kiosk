@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宿泊者名簿登録 / Guest Registration</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; color: #202124; }
+        .form-container { max-width: 640px; margin: 0 auto; }
+        .header-card { 
+            background: white; border-top: 8px solid #004aad; border-radius: 8px; 
+            padding: 24px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+        }
+        /* ヘッダーの装飾にグラデーション */
+        .header-accent { height: 8px; background: linear-gradient(90deg, #5de0e6, #004aad); border-radius: 8px 8px 0 0; margin: -24px -24px 20px -24px; }
+        .question-card { background: white; border-radius: 8px; padding: 24px; margin-bottom: 12px; border: 1px solid #dadce0; }
+        .label { font-weight: bold; display: block; margin-bottom: 8px; font-size: 16px; }
+        .description { font-size: 13px; color: #5f6368; margin-bottom: 15px; white-space: pre-wrap; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea { 
+            width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 4px; font-size: 16px; box-sizing: border-box; outline: none; background: #fff;
+        }
+        input:focus { border: 2px solid #5de0e6; }
+        .radio-item { margin-bottom: 10px; display: flex; align-items: center; }
+        .radio-item input { margin-right: 10px; width: 18px; height: 18px; }
+        .submit-btn { 
+            background: linear-gradient(90deg, #5de0e6, #004aad);
+            color: white; padding: 16px; border: none; border-radius: 8px; 
+            font-size: 18px; cursor: pointer; font-weight: bold; width: 100%;
+            box-shadow: 0 4px 10px rgba(0,74,173,0.2); transition: opacity 0.2s;
+        }
+        .submit-btn:disabled { opacity: 0.6; }
+        .required { color: #d93025; margin-left: 4px; }
+        .terms-box { height: 150px; overflow-y: scroll; border: 1px solid #eee; padding: 15px; font-size: 12px; background: #fdfdfd; margin-bottom: 10px; white-space: pre-wrap; color: #444; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="header-card">
+            <div class="header-accent"></div>
+            <h1>宿泊者名簿への登録</h1>
+            <p>Registration Form (Inns and Hotels Act)</p>
+        </div>
+
+        <form id="mainForm">
+            <div class="question-card">
+                <span class="label">ペットの滞在有無／Will you be staying with a pet? <span class="required">*</span></span>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="pet" value="はい(Yes)" required> はい（Yes, I will be staying with a pet）</label>
+                    <label class="radio-item"><input type="radio" name="pet" value="いいえ(No)"> いいえ（No, I will not be staying with a pet）</label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <label class="label">宿泊者氏名(全員)／Guest's name(All guests) <span class="required">*</span></label>
+                <p class="description">宿泊者全員の名前を改行して入力してください。 / Please enter the names of all guests, each on a new line.</p>
+                <textarea id="guestNames" required rows="4" placeholder="1. 山田太郎（35）, 2. 山田花子 (32)..."></textarea>
+            </div>
+
+            <div class="question-card">
+                <label class="label">宿泊者住所（代表者の住所を記入）／ Guest Address <span class="required">*</span></label>
+                <textarea id="address" required rows="2"></textarea>
+            </div>
+
+            <div class="question-card">
+                <label class="label">電話番号／ Phone Number <span class="required">*</span></label>
+                <input type="tel" id="tel" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">メールアドレス／Email Address <span class="required">*</span></label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="question-card">
+                <span class="label">性別／Gender <span class="required">*</span></span>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="gender" value="男性" required> 男性／Male</label>
+                    <label class="radio-item"><input type="radio" name="gender" value="女性"> 女性／Female</label>
+                    <label class="radio-item"><input type="radio" name="gender" value="その他"> その他／Other</label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <label class="label">年齢／Age <span class="required">*</span></label>
+                <input type="text" id="age" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">前泊地／Stayed Last night <span class="required">*</span></label>
+                <input type="text" id="prevStay" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">行先地／Destination <span class="required">*</span></label>
+                <input type="text" id="nextStay" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">チェックイン日／Check-in Date <span class="required">*</span></label>
+                <input type="date" id="checkinDate" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">チェックアウト日／Check-out Date <span class="required">*</span></label>
+                <input type="date" id="checkoutDate" required>
+            </div>
+
+            <div class="question-card">
+                <label class="label">身分証明書／Passport pictures (日本国籍の方は不要です)</label>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+
+            <div class="question-card">
+                <span class="label">利用規約およびペット同伴規約への同意 <span class="required">*</span></span>
+                <div class="terms-box">
+宿泊約款 / Accommodation Terms and Conditions 
+
+第1条（適用） / Article 1 (Scope of Application) 
+本約款は、当施設と宿泊者との間で締結される宿泊契約及びこれに関連する契約に適用されます。 
+These terms apply to accommodation contracts and related agreements between our facility and the guest.  
+
+第2条（宿泊契約の成立） / Article 2 (Conclusion of  Contract) 
+宿泊希望者が申込みを行い、当施設が承諾した時点で契約が成立します。 
+The accommodation contract is concluded when the guest applies and the facility accepts the application.  
+
+第3条（宿泊の拒否） / Article 3 (Right to Refuse  Accommodation) 
+以下の場合、当施設は宿泊を拒否できます：法令違反、公序良俗に反する行為、 他の宿泊者への迷惑行為など。 
+The facility may refuse accommodation in cases such as legal violations, acts against public order, or disturbances to other guests.  
+
+第4条（チェックイン・チェックアウト） / Article 4 (Check in/Check-out) 
+チェックインは16:00以降、チェックアウトは10:00までとします。 
+Check-in is from 16:00, and check-out is by 10:00.  
+
+第5条（料金の支払い） / Article 5 (Payment) 
+宿泊料金は事前決済またはチェックイン時にお支払いください。返金は原則不可ですが、返金の可否は各予約サイトのキャンセルポリシーに準じます。 
+Accommodation fees must be paid in advance or at check-in. Refunds are generally not available, but follow the cancellation policy of each booking site.  
+
+第6条（利用上の注意） / Article 6 (Use of Facility) 
+施設内およびベランダを含む敷地内はすべて禁煙です。騒音・パーティー・違法行為は禁止です。 
+Smoking is prohibited throughout the facility including balconies. Noise, parties, and illegal acts are strictly prohibited. 
+
+第7条（免責事項） / Article 7 (Disclaimer) 
+施設内での事故や盗難等について、当施設は責任を負いません。 
+The facility is not responsible for accidents, theft, etc. occurring within the premises.  
+
+第8条（損害賠償） / Article 8 (Compensation for Damages) 
+施設の設備・備品の破損があった場合、宿泊者に賠償を請求することがあります。 
+In case of damage to the property or equipment, compensation may be claimed from the guest.  
+
+第9条（個人情報の取扱い） / Article 9 (Handling of  Personal Information) 
+個人情報は、宿泊業務及び法令に基づく目的以外には使用しません。 
+Personal information will only be used for accommodation operations and in accordance with laws.  
+
+第10条（宿泊者情報の提供） / Article 10 (Guest Information  Submission)
+旅館業法等の関係法令に基づき、宿泊者が日本在住の場合は、宿泊者全員の氏名、代表者の住所、連絡先、メールアドレス、身分証明書を、チェックイン時ま でに当施設指定の方法（宿泊者名簿）で提示すること。外国籍の場合は、宿泊者 全員の氏名、年齢、住所に加え、代表者の連絡先（電話番号・メールアドレス） を同様に提示し、パスポートの提示および宿泊者名簿への記入も必要です。 
+In accordance with relevant laws and regulations, including the Inns and Hotels Act, guests residing in Japan must submit the names of all guests, the representative’s address, contact number, email address, and a valid ID by the time of check-in using the method specified by the facility (guest registration form). Foreign nationals must also provide the names, ages, and addresses of all guests, the representative’s contact number and email address, and are required to present their passports and complete the guest registration form.  
+
+第11条（無断宿泊および無断招待の禁止） / Article 11  (Unauthorized Guests Prohibited) 
+申告されていない宿泊者の無断滞在や第三者の招待は禁止です。発覚した場合、 即時退出および違約金が発生します。 
+Unauthorized overnight stays or inviting third parties without prior approval are strictly prohibited. Violations may result in immediate eviction and penalties. 
+
+第12条（ハウスルール遵守義務） / Article 12 (Compliance  with House Rules) 
+宿泊者は施設内の掲示やガイドに記載されたハウスルールに従うものとします。 
+Guests are required to follow the house rules posted within the property or included in the welcome guide.  
+
+第13条（鍵の紛失に関する責任） / Article 13 (Key Loss  Responsibility) 
+伴の紛失・破損が発生した場合は、実費を請求いたします。 
+In the event of key loss or damage, the guest will be charged for replacement costs.  
+
+第14条（近隣住民への配慮） / Article 14 (Consideration for  Neighbors) 
+当館の他入居者及び近隣住民への迷惑となる行為（騒音・ゴミの不法投棄・共用 部での迷惑行為等）はお控えください。 
+Please refrain from any actions that may cause inconvenience to other tenants or neighboring residents, such as excessive noise, illegal dumping of garbage, or disruptive behavior in shared spaces.  
+
+第15条（ゴミ出し・分別ルール） / Article 15 (Garbage  Disposal Rules) 
+地域のごみ収集場への廃棄は禁止です。ゴミ処理は当施設のハウスルールに従ってください。 
+Disposal of garbage at local collection sites is strictly prohibited. Please follow the house rules for waste disposal.  
+
+第16条（施設による契約の解除） / Article 16 (Termination  by Facility) 
+違法行為、公序良俗に反する行為、重大なハウスルール違反があった場合、施設 は契約を解除し、即時退去を求めることができます。 
+In cases of illegal acts, serious rule violations, or behavior against public order, the facility reserves the right to terminate the contract and request immediate departure. 
+
+第17条（緊急時の対応） / Article 17 (Emergency  Response) 
+火災・災害・設備故障など緊急時は、速やかに当施設の緊急連絡先 （090-3435-1222）へご連絡ください。必要に応じて、警察（110）、消防・救 急（119）にも通報してください。 
+In case of emergencies such as fire, disaster, or equipment failure, please contact the facility's emergency number (090-3435-1222) immediately. Also call the police (110) or fire/ambulance services (119) as needed.  
+
+第18条（禁止行為） / Article 18 (Prohibited Acts) 
+薬物使用、反社会的行為、無断転貸（Airbnbや他人への又貸し含む）は固く禁じます。これらが確認された場合、契約は即時解除され、退去を求めます。 
+Any drug use, antisocial behavior, or unauthorized subletting (including Airbnb or others) is strictly prohibited. Violations will result in immediate termination of the contract and eviction.  
+
+第19条（火気使用の制限） / Article 19 (Fire Use  Restrictions) 
+施設内では火気の使用（キャンドル、焚火、線香、調理器具等）を禁止しています。 
+The use of fire (candles, open flames, incense, cooking devices, etc.) is strictly prohibited within the facility.  
+
+第20条（盗難・忘れ物対応） / Article 20 (Lost & Found) 
+忘れ物はチェックアウト後1週間保管いたします。送料は着払いにてご負担いただきます。 
+Lost items will be kept for one week after check-out. Shipping costs are borne by the guest (cash on delivery).  
+
+第21条（監視カメラについて） / Article 21 (Security  Cameras) 
+施設敷地内に防犯カメラを設置しており、安全確保の目的で録画を行っておりま す。録画データは第三者に提供されません。 
+Security cameras are installed on the premises for safety purposes, and footage is recorded. The data will not be provided to third parties. 
+
+
+【ペット同伴に関する宿泊約款 / Terms and Conditions for  Accompanied Pets 
+■ ■ 第1条（ペット滞在事前承認制）/Article １ (Prior Approval for  Accompanying Pets) 
+ペットの同伴は、事前に当施設「⽥ DEN KAMAKURA」の承認を得た場 合に限り可能とします。  
+Bringing pets is allowed only with prior approval from "DEN  KAMAKURA". 
+
+同伴可能なペットの種類（⽝・猫）や頭数・サイズは、予約時にご相談 ください。  
+The type (dogs, cats), number, and size of pets must be confirmed  at the time of booking. 
+
+■ ■ 第2条（宿泊者の責任） / Article ２ (Guest Responsibility) 
+ペットは飼い主の責任で管理し、他の宿泊者や近隣住⺠に迷惑をかけな いようにしてください。  
+Pets must be supervised by the owner and must not cause any  inconvenience to other guests or neighbors. 
+
+施設や家具などを破損した場合は、修理・清掃・補償費⽤を請求させて いただくことがあります。  
+Damages to the property or furniture may result in repair,  cleaning, or compensation charges. 
+
+■ ■ 第3条（施設内でのルール） / Article 3 (Facility Rules) 
+ペットを室内に放置したまま外出することは禁⽌です。  
+Leaving pets alone in the room is prohibited.
+
+ベッドやソファに直接ペットを乗せないでください。必要に応じて持参 のカバーをご使⽤ください。  
+Do not allow pets on beds or sofas. Please use your own cover if  necessary. 
+
+■ ■ 第4条（持参物） / Article ４ (Items to Bring) 
+ペット⽤トイレ、リード、キャリーケース、⾷器・⾷事類など必要な物 は全て飼い主がご持参ください。  
+Guests must bring all necessary pet supplies such as litter boxes,  leashes, carriers, and food bowls. 
+
+■ ■ 第5条（緊急時の対応） / Article ５ (Emergency Situations) 
+ペットの体調不良等が発⽣した場合は、飼い主の責任で対応し、必要に 応じて動物病院等をご利⽤ください。  
+In case of pet illness or emergency, the owner is responsible for  taking appropriate action including visiting a veterinary clinic. 
+
+■ ■ 第6条（宿泊拒否および強制退去） / Article ６(Refusal or  Expulsion) 
+ルール違反や他の宿泊者への迷惑⾏為があった場合、宿泊をお断りまた は途中退去をお願いすることがあります。  
+Violation of rules or disturbance to others may result in refusal of  stay or expulsion during your stay. 
+
+■ ■ 第7条（ワクチン接種証明の提出） / Article ７ (Vaccination  Certificates) 
+宿泊前に以下の接種証明書の提出が必要です：①狂⽝病予防接種証明書 （⽝）、②混合ワクチン接種証明書（⽝・猫ともに3種以上）。  
+Guests must submit the following certificates before check-in: ① Rabies vaccination (for dogs), ② Combination vaccine (3-in-1 or  more for dogs and cats).
+
+証明書は画像やPDFでの提出も可能です。未提出または不備がある場合 は宿泊をお断りすることがあります。  
+Certificates can be submitted as image or PDF files. Failure to  submit or incomplete documentation may result in denial of stay. 
+
+■ ■ 第8条（近隣住⺠への配慮） / Article ８ (Consideration for  Neighbors) 
+当館の他⼊居者及び近隣住⺠への迷惑となる⾏為（騒⾳・ゴミの不法投 棄・共⽤部での迷惑⾏為等）はお控えください。  
+Please refrain from any actions that may cause inconvenience to  other tenants or neighboring residents, such as excessive noise,  illegal dumping of garbage, or disruptive behavior in shared  spaces. 
+
+■ ■ 第9条（ペットによる損害に関する責任） / Article ９ (Liability  for Damage Caused by Pets) 
+宿泊者は、ペットによって当施設の建物、家具、備品等に損害が⽣じた 場合、または他の宿泊者・第三者に被害を与えた場合には、その損害を 全額賠償する責任を負うものとします。  
+Guests shall be fully responsible for compensating any damage  caused by their pets to the building, furniture, or fixtures of the  facility, or for any harm caused to other guests or third parties. 
+
+■ 第10条（マーキングおよびトイレのしつけ）/ Article 10 (Marking  and Toilet Training) 
+ペットが室内でマーキングをしたり、トイレのしつけが不⼗分で寝具・ 家具・カーテンなどを汚損した場合、追加の清掃費やクリーニング費⽤ をご請求する場合があります。  
+If your pet marks or soils the furniture, curtains, or bedding due to  inadequate toilet training, you may be charged an additional  cleaning or repair fee.
+
+■ 第11条（ペット滞在料⾦）/ Article 11 (Pet accommodation fee)  
+ペット滞在の場合、宿泊費に別途ペット滞在料⾦が発⽣します。  
+An additional pet accommodation fee will be charged separately  from the standard room rate.
+
+
+                </div>
+                <label><input type="checkbox" id="agree" required> 同意します / I agree to the terms.</label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">送信して完了 / Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const gasUrl = "https://script.google.com/macros/s/AKfycbwTnVbh3hbX3eCXSnPXvhwyTYXDkLyZma4mNi6wTTpB_Gv3BbXBvIEb3LgzhWligrz_/exec";
+        const redirectUrl = "https://infoadaxia-coder.github.io/checkin-kiosk/thanks_TC402.html";
+
+        document.getElementById('mainForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "送信中 / Sending...";
+
+            const file = document.getElementById('fileInput').files[0];
+            let fileData = null;
+            if (file) {
+                fileData = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            const payload = {
+                pet: document.querySelector('input[name="pet"]:checked').value,
+                names: document.getElementById('guestNames').value,
+                address: document.getElementById('address').value,
+                tel: document.getElementById('tel').value,
+                email: document.getElementById('email').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                age: document.getElementById('age').value,
+                prev: document.getElementById('prevStay').value,
+                next: document.getElementById('nextStay').value,
+                checkin: document.getElementById('checkinDate').value,
+                checkout: document.getElementById('checkoutDate').value,
+                fileData: fileData,
+                fileName: file ? file.name : ""
+            };
+
+            try {
+                const response = await fetch(gasUrl, { method: "POST", body: JSON.stringify(payload) });
+                const result = await response.json();
+                if (result.result === "success") window.location.href = redirectUrl;
+            } catch (e) {
+                alert("送信に失敗しました。");
+                btn.disabled = false;
+                btn.innerText = "送信して完了 / Submit";
+            }
+        };
+    </script>
+</body>
+</html>
